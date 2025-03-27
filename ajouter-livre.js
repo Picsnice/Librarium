@@ -1,18 +1,17 @@
-const apiKey = 'TAAIzaSyD6ZoSkNp9fHsyWdJe0kB8uVqv9hC_oH9s_CLE_API_GOOGLE_BOOKS'; // remplace ici par ta clé API
+const apiKey = 'AIzaSyD6ZoSkNp9fHsyWdJe0kB8uVqv9hC_oH9s';
 const searchForm = document.getElementById('search-form');
 const searchInput = document.getElementById('search-input');
 const resultsContainer = document.getElementById('results');
 const scanButton = document.getElementById('scan-button');
 const scannerContainer = document.getElementById('scanner-container');
 
-// Recherche manuelle
+// 🔍 Recherche manuelle
 searchForm.addEventListener('submit', function(e) {
   e.preventDefault();
   const query = searchInput.value;
   lancerRecherche(query);
 });
 
-// Fonction pour lancer la recherche dans l'API Google Books
 function lancerRecherche(query) {
   fetch(`https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(query)}&key=${apiKey}`)
     .then(response => response.json())
@@ -43,7 +42,6 @@ function lancerRecherche(query) {
     });
 }
 
-// Ajout d'un livre à la collection
 function ajouterLivre(title, authors, thumbnail) {
   const book = { title, authors, thumbnail };
   let collection = JSON.parse(localStorage.getItem('collection')) || [];
@@ -52,16 +50,29 @@ function ajouterLivre(title, authors, thumbnail) {
   alert(`"${title}" ajouté à votre collection !`);
 }
 
-// Activation du scanner
+// 📷 Scanner un ISBN
 scanButton.addEventListener('click', function() {
   scannerContainer.style.display = 'block';
+  if (!document.getElementById('cancel-scan')) {
+    const cancelButton = document.createElement('button');
+    cancelButton.id = 'cancel-scan';
+    cancelButton.textContent = '❌ Annuler';
+    cancelButton.style.marginTop = '10px';
+    scannerContainer.appendChild(cancelButton);
+
+    cancelButton.addEventListener('click', () => {
+      Quagga.stop();
+      scannerContainer.style.display = 'none';
+    });
+  }
+
   Quagga.init({
     inputStream: {
       name: "Live",
       type: "LiveStream",
       target: document.querySelector('#scanner'),
       constraints: {
-        facingMode: "environment" // caméra arrière
+        facingMode: "environment"
       }
     },
     decoder: {
