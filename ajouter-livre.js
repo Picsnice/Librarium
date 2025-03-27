@@ -5,7 +5,6 @@ const resultsContainer = document.getElementById('results');
 const scanButton = document.getElementById('scan-button');
 const scannerContainer = document.getElementById('scanner-container');
 
-// 🔍 Recherche manuelle
 searchForm.addEventListener('submit', function(e) {
   e.preventDefault();
   const query = searchInput.value;
@@ -50,22 +49,24 @@ function ajouterLivre(title, authors, thumbnail) {
   alert(`"${title}" ajouté à votre collection !`);
 }
 
-// 📷 Scanner un ISBN
+// 🎯 SCANNER ISBN
 scanButton.addEventListener('click', function() {
   scannerContainer.style.display = 'block';
+
+  // Ajout d'un bouton Annuler
   if (!document.getElementById('cancel-scan')) {
     const cancelButton = document.createElement('button');
     cancelButton.id = 'cancel-scan';
     cancelButton.textContent = '❌ Annuler';
     cancelButton.style.marginTop = '10px';
-    scannerContainer.appendChild(cancelButton);
-
     cancelButton.addEventListener('click', () => {
       Quagga.stop();
       scannerContainer.style.display = 'none';
     });
+    scannerContainer.appendChild(cancelButton);
   }
 
+  // Initialisation du scanner avec Quagga
   Quagga.init({
     inputStream: {
       name: "Live",
