@@ -3,7 +3,7 @@ const triSelect = document.getElementById('tri');
 const btnAjout = document.getElementById('go-to-search');
 
 btnAjout.addEventListener('click', () => {
-  window.location.href = "ajouter-livre.html";
+  window.location.href = "ajouter-livre.html"
   ; // Remplace par ta future page de recherche dédiée si besoin
 });
 
