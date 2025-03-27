@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Ma collection de livres - Librarium</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <h1>📚 Ma collection de Livres / BD</h1>
+    <a href="index.html">⬅ Retour à l'accueil</a>
+    <button id="go-to-search">🔍 Ajouter un livre</button>
+  </header>
+
+  <section>
+    <label for="tri">Trier par :</label>
+    <select id="tri">
+      <option value="titre">Titre</option>
+      <option value="auteur">Auteur</option>
+    </select>
+  </section>
+
+  <ul id="collection-livres" class="collection-list"></ul>
+
+  <script src="livres.js"></script>
+</body>
+</html>
