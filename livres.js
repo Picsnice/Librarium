@@ -1,8 +1,24 @@
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-app.js";
+import { getFirestore, collection, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCJ3jYAV_Gezs15BXksrlAltDreRyinsyo",
+  authDomain: "librarium-b4c0d.firebaseapp.com",
+  projectId: "librarium-b4c0d",
+  storageBucket: "librarium-b4c0d.firebasestorage.app",
+  messagingSenderId: "1441664273",
+  appId: "1:1441664273:web:fdcaa227a96992c5e0d0b0"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
 const livresContainer = document.getElementById('livres');
 
 async function afficherCollection() {
   try {
-    const snapshot = await window.db.collection('livres').orderBy('createdAt', 'desc').get();
+    const q = query(collection(db, "livres"), orderBy("createdAt", "desc"));
+    const snapshot = await getDocs(q);
 
     if (snapshot.empty) {
       livresContainer.innerHTML = "<p>Aucun livre dans votre collection.</p>";
@@ -11,7 +27,6 @@ async function afficherCollection() {
 
     snapshot.forEach(doc => {
       const livre = doc.data();
-
       const livreDiv = document.createElement('div');
       livreDiv.classList.add('livre');
 
@@ -32,7 +47,6 @@ async function afficherCollection() {
 
 document.addEventListener('DOMContentLoaded', afficherCollection);
 
-// Redirection bouton
 const boutonAjouter = document.getElementById('go-to-search');
 if (boutonAjouter) {
   boutonAjouter.addEventListener('click', () => {
