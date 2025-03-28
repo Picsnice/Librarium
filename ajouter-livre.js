@@ -1,8 +1,8 @@
-// Import Firebase
+// Import Firebase SDKs
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-app.js";
 import { getFirestore, addDoc, collection } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-firestore.js";
 
-// Configuration Firebase
+// Config Firebase
 const firebaseConfig = {
   apiKey: "AIzaSyCJ3jYAV_Gezs15BXksrlAltDreRyinsyo",
   authDomain: "librarium-b4c0d.firebaseapp.com",
@@ -12,7 +12,7 @@ const firebaseConfig = {
   appId: "1:1441664273:web:fdcaa227a96992c5e0d0b0"
 };
 
-// Initialisation
+// Init Firebase + Firestore
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
@@ -64,7 +64,7 @@ function lancerRecherche(query) {
     });
 }
 
-// Ajout du livre ou BD dans Firestore
+// Fonction pour ajouter un livre ou une BD dans Firestore
 async function ajouterLivre(title, authors, thumbnail) {
   const type = typeSelector.value;
   const collectionName = type === 'bd' ? 'bd' : 'livres';
@@ -83,7 +83,7 @@ async function ajouterLivre(title, authors, thumbnail) {
   }
 }
 
-// Scanner ISBN
+// Scanner un code ISBN
 startScanButton.addEventListener('click', () => {
   startScanButton.style.display = 'none';
   stopScanButton.style.display = 'inline-block';
@@ -120,4 +120,6 @@ stopScanButton.addEventListener('click', () => {
     });
   }
 });
+
+// ✅ Rendre la fonction accessible depuis le HTML
 window.ajouterLivre = ajouterLivre;
