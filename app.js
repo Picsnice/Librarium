@@ -1,4 +1,4 @@
-// Configuration Firebase
+// Config Firebase
 const firebaseConfig = {
     apiKey: "AIzaSyCJ3jYAV_Gezs15BXksrlAltDreRyinsyo",
     authDomain: "librarium-b4c0d.firebaseapp.com",
@@ -8,9 +8,9 @@ const firebaseConfig = {
     appId: "1:1441664273:web:fdcaa227a96992c5e0d0b0"
   };
   
-  // Initialisation Firebase
-  window.firebase.initializeApp(firebaseConfig);
-  const db = window.firebase.firestore();
+  // Init Firebase
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
   
   // Afficher les livres
   function afficherLivres() {

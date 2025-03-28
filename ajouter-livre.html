@@ -2,50 +2,51 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>Ajouter un livre - Librarium</title>
-  <link rel="stylesheet" href="styles.css">
-  <link rel="manifest" href="manifest.json">
-  <link rel="icon" type="image/png" href="icon.png">
-  <meta name="theme-color" content="#003366">
-
-  <!-- Html5Qrcode CDN -->
-  <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+  <title>Ajouter un livre / BD</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 20px;
+    }
+    .book-result {
+      border: 1px solid #ccc;
+      padding: 10px;
+      margin: 10px 0;
+    }
+    button {
+      margin-top: 10px;
+      padding: 5px 10px;
+    }
+  </style>
 </head>
 <body>
+
   <header>
-    <h1>📚 Ajouter un livre à ma collection</h1>
-    <a href="livres.html">⬅ Retour à ma collection</a>
+    <h1>📚 Ajouter un livre ou une BD</h1>
+    <a href="index.html">⬅ Retour à l'accueil</a>
   </header>
 
-  <!-- Zone de recherche manuelle -->
   <form id="search-form">
     <label for="type">Type :</label>
     <select id="type">
       <option value="livre">📚 Livre</option>
       <option value="bd">📖 BD</option>
     </select>
-  
+
     <input type="text" id="search-input" placeholder="Titre, auteur ou ISBN" required>
     <button type="submit">Rechercher</button>
   </form>
-  
-
-  <!-- Bouton Scanner -->
-  <button id="start-scan">📷 Scanner un ISBN</button>
-  <button id="stop-scan" style="display:none;">❌ Arrêter le scan</button>
-
-  <!-- Zone du scanner -->
-  <div id="scanner" style="width:100%; max-width:400px; margin-top:20px;"></div>
 
   <!-- Résultats -->
   <div id="results"></div>
 
-  <!-- Firebase compat SDKs -->
-<script src="https://www.gstatic.com/firebasejs/11.5.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/11.5.0/firebase-firestore-compat.js"></script>
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/11.5.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/11.5.0/firebase-firestore-compat.js"></script>
 
-<!-- Script d'ajout -->
-<script src="app-ajout.js"></script>
+  <!-- Script d’ajout -->
+  <script src="app-ajout.js"></script>
 
 </body>
 </html>

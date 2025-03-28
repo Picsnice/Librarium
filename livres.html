@@ -2,57 +2,36 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>Ma collection de livres - Librarium</title>
-  <link rel="stylesheet" href="styles.css">
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-app.js";
-    import { getFirestore } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-firestore.js";
-    import { getAuth } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-auth.js";
-  
-    const firebaseConfig = {
-      apiKey: "AIzaSyCJ3jYAV_Gezs15BXksrlAltDreRyinsyo",
-      authDomain: "librarium-b4c0d.firebaseapp.com",
-      projectId: "librarium-b4c0d",
-      storageBucket: "librarium-b4c0d.firebasestorage.app",
-      messagingSenderId: "1441664273",
-      appId: "1:1441664273:web:fdcaa227a96992c5e0d0b0"
-    };
-  
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-    const auth = getAuth(app);
-  
-    // Exposer dans window pour les utiliser dans tes autres fichiers
-    window.firebaseApp = app;
-    window.db = db;
-    window.auth = auth;
-  </script>
-  
+  <title>Ma collection de Livres</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 20px;
+    }
+    .livre {
+      border: 1px solid #ccc;
+      padding: 10px;
+      margin: 10px 0;
+    }
+  </style>
 </head>
 <body>
+
   <header>
-    <h1>📚 Ma collection de Livres / BD</h1>
+    <h1>📚 Ma collection de Livres</h1>
     <a href="index.html">⬅ Retour à l'accueil</a>
-    <button id="go-to-search">🔍 Ajouter un livre</button>
+    <a href="ajouter-livre.html"><button>🔍 Ajouter un livre</button></a>
   </header>
 
-  <section>
-    <label for="tri">Trier par :</label>
-    <select id="tri">
-      <option value="titre">Titre</option>
-      <option value="auteur">Auteur</option>
-    </select>
-  </section>
+  <div id="livres"></div>
 
-  <ul id="collection-livres" class="collection-list"></ul>
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/11.5.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/11.5.0/firebase-firestore-compat.js"></script>
 
-  <!-- Firebase compat SDKs -->
-<script src="https://www.gstatic.com/firebasejs/11.5.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/11.5.0/firebase-firestore-compat.js"></script>
-
-<!-- Script principal de ton site -->
-<script src="app.js"></script>
-
+  <!-- Script de lecture -->
+  <script src="app.js"></script>
 
 </body>
 </html>
