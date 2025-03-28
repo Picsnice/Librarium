@@ -4,8 +4,10 @@ const searchInput = document.getElementById('search-input');
 const resultsContainer = document.getElementById('results');
 const scanButton = document.getElementById('scan-button');
 const scannerContainer = document.getElementById('scanner-container');
+const scannerVideo = document.getElementById('scanner');
 
-searchForm.addEventListener('submit', function(e) {
+// Recherche manuelle
+searchForm.addEventListener('submit', function (e) {
   e.preventDefault();
   const query = searchInput.value;
   lancerRecherche(query);
@@ -49,11 +51,10 @@ function ajouterLivre(title, authors, thumbnail) {
   alert(`"${title}" ajouté à votre collection !`);
 }
 
-// 🎯 SCANNER ISBN
-scanButton.addEventListener('click', function() {
+// Fonction pour lancer le scanner
+scanButton.addEventListener('click', () => {
   scannerContainer.style.display = 'block';
 
-  // Ajout d'un bouton Annuler
   if (!document.getElementById('cancel-scan')) {
     const cancelButton = document.createElement('button');
     cancelButton.id = 'cancel-scan';
@@ -62,26 +63,31 @@ scanButton.addEventListener('click', function() {
     cancelButton.addEventListener('click', () => {
       Quagga.stop();
       scannerContainer.style.display = 'none';
+      scannerContainer.innerHTML = '<video id="scanner"></video>'; // reset
     });
     scannerContainer.appendChild(cancelButton);
   }
 
-  // Initialisation du scanner avec Quagga
   Quagga.init({
     inputStream: {
       name: "Live",
       type: "LiveStream",
       target: document.querySelector('#scanner'),
       constraints: {
-        facingMode: "environment"
+        width: 640,
+        height: 480,
+        facingMode: { exact: "environment" } // Caméra arrière
       }
     },
     decoder: {
       readers: ["ean_reader"]
-    }
-  }, function(err) {
+    },
+    locate: true
+  }, function (err) {
     if (err) {
       console.error(err);
+      alert("Erreur d'accès à la caméra ou de configuration.");
+      scannerContainer.style.display = 'none';
       return;
     }
     Quagga.start();
@@ -89,9 +95,11 @@ scanButton.addEventListener('click', function() {
 
   Quagga.onDetected(data => {
     const code = data.codeResult.code;
-    Quagga.stop();
-    scannerContainer.style.display = 'none';
-    searchInput.value = code;
-    lancerRecherche(code);
+    if (code) {
+      Quagga.stop();
+      scannerContainer.style.display = 'none';
+      searchInput.value = code;
+      lancerRecherche(code);
+    }
   });
 });

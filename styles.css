@@ -58,4 +58,19 @@ body {
     border: 2px solid #ccc;
     border-radius: 8px;
   }
+  #scanner-container {
+    position: relative;
+    background: #000;
+    padding: 10px;
+    margin-top: 20px;
+    border-radius: 8px;
+    max-width: 100%;
+    text-align: center;
+  }
+  
+  #scanner {
+    width: 100%;
+    max-width: 600px;
+    border-radius: 8px;
+  }
   
