@@ -36,8 +36,8 @@ const firebaseConfig = {
     const resultsContainer = document.getElementById('results');
     resultsContainer.innerHTML = '';
   
-    if (type === 'cd') {
-      // Recherche via MusicBrainz
+    if (type === 'cd' || type === 'vinyle') {
+        // Recherche via MusicBrainz
       fetch(`https://musicbrainz.org/ws/2/release/?query=${encodeURIComponent(query)}&fmt=json&limit=10`)
         .then(response => response.json())
         .then(data => {
@@ -57,7 +57,8 @@ const firebaseConfig = {
               <h3>${title}</h3>
               <p>Artiste(s) : ${authors}</p>
               <p>Chargement de la pochette...</p>
-              <button onclick="ajouterLivre('${title.replace(/'/g, "\\'")}', '${authors.replace(/'/g, "\\'")}', '', 'cd')">Ajouter à ma collection</button>
+              <button onclick="ajouterLivre('${title.replace(/'/g, "\\'")}', '${authors.replace(/'/g, "\\'")}', '', '${type}')">Ajouter à ma collection</button>
+
             `;
             resultsContainer.appendChild(resultDiv);
   
@@ -69,7 +70,8 @@ const firebaseConfig = {
                 if (img) {
                   resultDiv.querySelector('p:nth-of-type(2)').insertAdjacentHTML('afterend', `<img src="${img}" alt="Pochette" style="max-height:150px;">`);
                   resultDiv.querySelector('button').setAttribute('onclick',
-                    `ajouterLivre('${title.replace(/'/g, "\\'")}', '${authors.replace(/'/g, "\\'")}', '${img}', 'cd')`);
+                    `ajouterLivre('${title.replace(/'/g, "\\'")}', '${authors.replace(/'/g, "\\'")}', '${img}', '${type}')`);
+                  
                                   }
               })
               .catch(() => {
@@ -121,8 +123,10 @@ const firebaseConfig = {
   // Ajouter dans Firestore
   function ajouterLivre(title, authors, thumbnail, forcedType = null) {
     const type = forcedType || document.getElementById('type').value;
-    const collectionName = type === 'bd' ? 'bd' : (type === 'cd' ? 'cd' : 'livres');
-  
+    const collectionName = type === 'bd' ? 'bd' :
+    type === 'cd' ? 'cd' :
+    type === 'vinyle' ? 'vinyles' : 'livres';
+
     db.collection(collectionName).add({
       title,
       authors,

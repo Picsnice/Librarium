@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Ma collection de Vinyles</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body { font-family: sans-serif; padding: 20px; }
+    .livre { border: 1px solid #ccc; padding: 10px; margin: 10px 0; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>💿 Ma collection de Vinyles</h1>
+    <a href="index.html">⬅ Retour à l'accueil</a>
+    <a href="ajouter-livre.html?type=vinyle"><button>🔍 Ajouter un vinyle</button></a>
+  </header>
+
+  <div id="vinyles"></div>
+
+  <script src="https://www.gstatic.com/firebasejs/11.5.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/11.5.0/firebase-firestore-compat.js"></script>
+  <script src="app-vinyles.js"></script>
+
+</body>
+</html>
