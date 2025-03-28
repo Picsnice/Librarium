@@ -2,11 +2,11 @@ const apiKey = 'AIzaSyD6ZoSkNp9fHsyWdJe0kB8uVqv9hC_oH9s';
 const searchForm = document.getElementById('search-form');
 const searchInput = document.getElementById('search-input');
 const resultsContainer = document.getElementById('results');
-const scanButton = document.getElementById('scan-button');
-const scannerContainer = document.getElementById('scanner-container');
-const scannerVideo = document.getElementById('scanner');
+const startScanButton = document.getElementById('start-scan');
+const stopScanButton = document.getElementById('stop-scan');
 
-// Recherche manuelle
+let html5QrcodeScanner;
+
 searchForm.addEventListener('submit', function (e) {
   e.preventDefault();
   const query = searchInput.value;
@@ -51,54 +51,40 @@ function ajouterLivre(title, authors, thumbnail) {
   alert(`"${title}" ajouté à votre collection !`);
 }
 
-// Fonction pour lancer le scanner
-scanButton.addEventListener('click', () => {
-  scannerContainer.style.display = 'block';
+// 🎯 Scanner avec Html5Qrcode
+startScanButton.addEventListener('click', () => {
+  html5QrcodeScanner = new Html5Qrcode("scanner");
+  startScanButton.style.display = "none";
+  stopScanButton.style.display = "inline-block";
 
-  if (!document.getElementById('cancel-scan')) {
-    const cancelButton = document.createElement('button');
-    cancelButton.id = 'cancel-scan';
-    cancelButton.textContent = '❌ Annuler';
-    cancelButton.style.marginTop = '10px';
-    cancelButton.addEventListener('click', () => {
-      Quagga.stop();
-      scannerContainer.style.display = 'none';
-      scannerContainer.innerHTML = '<video id="scanner"></video>'; // reset
+  html5QrcodeScanner.start(
+    { facingMode: "environment" },
+    {
+      fps: 10,
+      qrbox: { width: 250, height: 100 }
+    },
+    (decodedText, decodedResult) => {
+      // On stoppe le scan dès qu'un code est trouvé
+      html5QrcodeScanner.stop().then(() => {
+        document.getElementById('scanner').innerHTML = "";
+        startScanButton.style.display = "inline-block";
+        stopScanButton.style.display = "none";
+        searchInput.value = decodedText;
+        lancerRecherche(decodedText);
+      });
+    },
+    (errorMessage) => {
+      // console.log("Erreur scan", errorMessage); // silencieux
+    }
+  );
+});
+
+stopScanButton.addEventListener('click', () => {
+  if (html5QrcodeScanner) {
+    html5QrcodeScanner.stop().then(() => {
+      document.getElementById('scanner').innerHTML = "";
+      startScanButton.style.display = "inline-block";
+      stopScanButton.style.display = "none";
     });
-    scannerContainer.appendChild(cancelButton);
   }
-
-  Quagga.init({
-    inputStream: {
-      name: "Live",
-      type: "LiveStream",
-      target: document.querySelector('#scanner'),
-      constraints: {
-        facingMode: "environment"
-      }
-      
-    },
-    decoder: {
-      readers: ["ean_reader"]
-    },
-    locate: true
-  }, function (err) {
-    if (err) {
-      console.error(err);
-      alert("Erreur d'accès à la caméra ou de configuration.");
-      scannerContainer.style.display = 'none';
-      return;
-    }
-    Quagga.start();
-  });
-
-  Quagga.onDetected(data => {
-    const code = data.codeResult.code;
-    if (code) {
-      Quagga.stop();
-      scannerContainer.style.display = 'none';
-      searchInput.value = code;
-      lancerRecherche(code);
-    }
-  });
 });
