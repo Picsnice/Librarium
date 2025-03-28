@@ -1,6 +1,6 @@
 // Import Firebase SDKs
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-app.js";
-import { getFirestore, addDoc, collection } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-firestore.js";
+import { getFirestore, addDoc, collection, Timestamp } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-firestore.js";
 
 // Config Firebase
 const firebaseConfig = {
@@ -74,7 +74,7 @@ async function ajouterLivre(title, authors, thumbnail) {
       title,
       authors,
       thumbnail,
-      createdAt: new Date()
+      createdAt: Timestamp.now()
     });
     alert(`"${title}" ajouté à votre collection de ${type === 'bd' ? 'BD' : 'livres'} !`);
   } catch (error) {
