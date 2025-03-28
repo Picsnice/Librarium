@@ -1,3 +1,5 @@
+import { addDoc, collection } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-firestore.js";
+
 const searchForm = document.getElementById('search-form');
 const searchInput = document.getElementById('search-input');
 const typeSelector = document.getElementById('type');
@@ -51,7 +53,8 @@ async function ajouterLivre(title, authors, thumbnail) {
   const collectionName = type === 'bd' ? 'bd' : 'livres';
 
   try {
-    const docRef = await window.db.collection(collectionName).add({
+    const docRef = await addDoc(collection(window.db, collectionName), {
+
       title,
       authors,
       thumbnail,
