@@ -24,13 +24,14 @@ const firebaseConfig = {
   
         snapshot.forEach(doc => {
           const bd = doc.data();
-          const bdDiv = document.createElement('div');
-          bdDiv.classList.add('livre');
           bdDiv.innerHTML = `
-            <h3>${bd.title}</h3>
-            <p>Auteur(s) : ${bd.authors}</p>
-            ${bd.thumbnail ? `<img src="${bd.thumbnail}" alt="Couverture" style="max-height:150px;">` : ''}
-          `;
+  <h3>${bd.title}</h3>
+  <p>Auteur(s) : ${bd.authors}</p>
+  ${bd.thumbnail ? `<img src="${bd.thumbnail}" alt="Couverture" style="max-height:150px;">` : ''}
+  <br>
+  <button onclick="supprimerDocument('${doc.id}', 'bd')">🗑️ Supprimer</button>
+`;
+
           container.appendChild(bdDiv);
         });
       })
@@ -38,6 +39,19 @@ const firebaseConfig = {
         console.error("Erreur Firestore :", err);
         container.innerHTML = "<p>Erreur de chargement.</p>";
       });
+  }
+  function supprimerDocument(id, collection) {
+    if (confirm("Supprimer cette BD ?")) {
+      db.collection(collection).doc(id).delete()
+        .then(() => {
+          alert("BD supprimée.");
+          location.reload();
+        })
+        .catch(error => {
+          console.error("Erreur lors de la suppression :", error);
+          alert("Erreur lors de la suppression.");
+        });
+    }
   }
   
   document.addEventListener('DOMContentLoaded', afficherBD);
