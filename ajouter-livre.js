@@ -4,6 +4,7 @@ const searchInput = document.getElementById('search-input');
 const resultsContainer = document.getElementById('results');
 const startScanButton = document.getElementById('start-scan');
 const stopScanButton = document.getElementById('stop-scan');
+const scannerDiv = document.getElementById('scanner');
 
 let html5QrcodeScanner;
 
@@ -32,59 +33,4 @@ function lancerRecherche(query) {
           <p>Auteur(s) : ${book.authors ? book.authors.join(', ') : 'Inconnu'}</p>
           <img src="${book.imageLinks?.thumbnail || ''}" alt="Couverture" style="max-height:150px;">
           <p>${book.description ? book.description.substring(0, 150) + '...' : 'Pas de description disponible'}</p>
-          <button onclick="ajouterLivre('${book.title.replace(/'/g, "\\'")}', '${(book.authors ? book.authors.join(', ') : 'Inconnu').replace(/'/g, "\\'")}', '${book.imageLinks?.thumbnail || ''}')">Ajouter à ma collection</button>
-        `;
-        resultsContainer.appendChild(bookElement);
-      });
-    })
-    .catch(err => {
-      console.error('Erreur API', err);
-      resultsContainer.innerHTML = '<p>Une erreur est survenue lors de la recherche.</p>';
-    });
-}
-
-function ajouterLivre(title, authors, thumbnail) {
-  const book = { title, authors, thumbnail };
-  let collection = JSON.parse(localStorage.getItem('collection')) || [];
-  collection.push(book);
-  localStorage.setItem('collection', JSON.stringify(collection));
-  alert(`"${title}" ajouté à votre collection !`);
-}
-
-// 🎯 Scanner avec Html5Qrcode
-startScanButton.addEventListener('click', () => {
-  html5QrcodeScanner = new Html5Qrcode("scanner");
-  startScanButton.style.display = "none";
-  stopScanButton.style.display = "inline-block";
-
-  html5QrcodeScanner.start(
-    { facingMode: "environment" },
-    {
-      fps: 10,
-      qrbox: { width: 250, height: 100 }
-    },
-    (decodedText, decodedResult) => {
-      // On stoppe le scan dès qu'un code est trouvé
-      html5QrcodeScanner.stop().then(() => {
-        document.getElementById('scanner').innerHTML = "";
-        startScanButton.style.display = "inline-block";
-        stopScanButton.style.display = "none";
-        searchInput.value = decodedText;
-        lancerRecherche(decodedText);
-      });
-    },
-    (errorMessage) => {
-      // console.log("Erreur scan", errorMessage); // silencieux
-    }
-  );
-});
-
-stopScanButton.addEventListener('click', () => {
-  if (html5QrcodeScanner) {
-    html5QrcodeScanner.stop().then(() => {
-      document.getElementById('scanner').innerHTML = "";
-      startScanButton.style.display = "inline-block";
-      stopScanButton.style.display = "none";
-    });
-  }
-});
+          <button onclick="ajouterLivre('${book.title.replace(/'/g, "\\'")}', '${(book.authors ? book.authors.join(', ') : 'Inconnu').replace(/
