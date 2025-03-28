@@ -31,3 +31,11 @@ function supprimerLivre(index) {
 }
 
 document.addEventListener('DOMContentLoaded', afficherCollection);
+
+const boutonAjouter = document.getElementById('go-to-search');
+if (boutonAjouter) {
+  boutonAjouter.addEventListener('click', () => {
+    window.location.href = 'ajouter-livre.html';
+  });
+}
+
