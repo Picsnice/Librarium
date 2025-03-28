@@ -29,10 +29,13 @@ const firebaseConfig = {
           const livreDiv = document.createElement('div');
           livreDiv.classList.add('livre');
           livreDiv.innerHTML = `
-            <h3>${livre.title}</h3>
-            <p>Auteur(s) : ${livre.authors}</p>
-            ${livre.thumbnail ? `<img src="${livre.thumbnail}" alt="Couverture" style="max-height:150px;">` : ''}
-          `;
+          <h3>${livre.title}</h3>
+          <p>Auteur(s) : ${livre.authors}</p>
+          ${livre.thumbnail ? `<img src="${livre.thumbnail}" alt="Couverture" style="max-height:150px;">` : ''}
+          <br>
+          <button onclick="supprimerDocument('${doc.id}', 'livres')">🗑️ Supprimer</button>
+        `;
+        
           container.appendChild(livreDiv);
         });
       })
@@ -40,6 +43,19 @@ const firebaseConfig = {
         console.error("Erreur Firestore :", err);
         container.innerHTML = "<p>Erreur de chargement.</p>";
       });
+  }
+  function supprimerDocument(id, collection) {
+    if (confirm("Supprimer ce document ?")) {
+      db.collection(collection).doc(id).delete()
+        .then(() => {
+          alert("Document supprimé.");
+          location.reload();
+        })
+        .catch(error => {
+          console.error("Erreur lors de la suppression :", error);
+          alert("Erreur lors de la suppression.");
+        });
+    }
   }
   
   document.addEventListener('DOMContentLoaded', afficherLivres);
