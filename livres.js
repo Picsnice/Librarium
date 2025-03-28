@@ -1,40 +1,33 @@
-const collectionList = document.getElementById('collection-livres');
-const triSelect = document.getElementById('tri');
-const btnAjout = document.getElementById('go-to-search');
+const livresContainer = document.getElementById('livres');
 
-btnAjout.addEventListener('click', () => {
-  window.location.href = "ajouter-livre.html";
-  // Remplace par ta future page de recherche dédiée si besoin
-});
-
-function chargerCollection() {
-  let collection = JSON.parse(localStorage.getItem('collection')) || [];
-  const critere = triSelect.value;
-
-  // Trie la collection selon le critère choisi
-  collection.sort((a, b) => {
-    const valA = (a[critere] || '').toLowerCase();
-    const valB = (b[critere] || '').toLowerCase();
-    return valA.localeCompare(valB);
-  });
-
-  collectionList.innerHTML = '';
+function afficherCollection() {
+  const collection = JSON.parse(localStorage.getItem('collection')) || [];
 
   if (collection.length === 0) {
-    collectionList.innerHTML = '<p>Aucun livre pour le moment.</p>';
+    livresContainer.innerHTML = "<p>Aucun livre dans votre collection.</p>";
     return;
   }
 
-  collection.forEach(book => {
-    const li = document.createElement('li');
-    li.innerHTML = `
-      <h3>${book.title}</h3>
-      <p>Auteur(s) : ${book.authors}</p>
-      <img src="${book.thumbnail}" alt="Couverture" style="max-height:150px;">
+  collection.forEach((livre, index) => {
+    const livreDiv = document.createElement('div');
+    livreDiv.classList.add('livre');
+
+    livreDiv.innerHTML = `
+      <h3>${livre.title}</h3>
+      <p>Auteur(s) : ${livre.authors}</p>
+      ${livre.thumbnail ? `<img src="${livre.thumbnail}" alt="Couverture" style="max-height:150px;">` : ''}
+      <button onclick="supprimerLivre(${index})">❌ Retirer</button>
     `;
-    collectionList.appendChild(li);
+
+    livresContainer.appendChild(livreDiv);
   });
 }
 
-triSelect.addEventListener('change', chargerCollection);
-document.addEventListener('DOMContentLoaded', chargerCollection);
+function supprimerLivre(index) {
+  let collection = JSON.parse(localStorage.getItem('collection')) || [];
+  collection.splice(index, 1);
+  localStorage.setItem('collection', JSON.stringify(collection));
+  location.reload();
+}
+
+document.addEventListener('DOMContentLoaded', afficherCollection);
