@@ -120,3 +120,4 @@ stopScanButton.addEventListener('click', () => {
     });
   }
 });
+window.ajouterLivre = ajouterLivre;
