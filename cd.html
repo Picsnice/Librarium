@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Ma collection de CD</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 20px;
+    }
+    .livre {
+      border: 1px solid #ccc;
+      padding: 10px;
+      margin: 10px 0;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>🎵 Ma collection de CD</h1>
+    <a href="index.html">⬅ Retour à l'accueil</a>
+    <a href="ajouter-livre.html?type=cd"><button>🔍 Ajouter un CD</button></a>
+  </header>
+
+  <div id="cd"></div>
+
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/11.5.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/11.5.0/firebase-firestore-compat.js"></script>
+
+  <!-- Script de lecture CD -->
+  <script src="app-cd.js"></script>
+
+</body>
+</html>
