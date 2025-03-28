@@ -33,6 +33,8 @@ const firebaseConfig = {
   
   function lancerRecherche(query) {
     const type = document.getElementById('type').value;
+    console.log("Type sélectionné :", type);
+
     const resultsContainer = document.getElementById('results');
     resultsContainer.innerHTML = '';
   
