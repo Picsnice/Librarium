@@ -74,10 +74,9 @@ scanButton.addEventListener('click', () => {
       type: "LiveStream",
       target: document.querySelector('#scanner'),
       constraints: {
-        width: 640,
-        height: 480,
-        facingMode: { exact: "environment" } // Caméra arrière
+        facingMode: "environment"
       }
+      
     },
     decoder: {
       readers: ["ean_reader"]
