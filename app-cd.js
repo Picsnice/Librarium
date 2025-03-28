@@ -27,10 +27,13 @@ const firebaseConfig = {
           const cdDiv = document.createElement('div');
           cdDiv.classList.add('livre');
           cdDiv.innerHTML = `
-            <h3>${cd.title}</h3>
-            <p>Auteur(s) : ${cd.authors}</p>
-            ${cd.thumbnail ? `<img src="${cd.thumbnail}" alt="Pochette" style="max-height:150px;">` : ''}
-          `;
+  <h3>${cd.title}</h3>
+  <p>Auteur(s) : ${cd.authors}</p>
+  ${cd.thumbnail ? `<img src="${cd.thumbnail}" alt="Pochette" style="max-height:150px;">` : ''}
+  <br>
+  <button onclick="supprimerDocument('${doc.id}', 'cd')">🗑️ Supprimer</button>
+`;
+
           container.appendChild(cdDiv);
         });
       })
@@ -38,6 +41,19 @@ const firebaseConfig = {
         console.error("Erreur Firestore :", err);
         container.innerHTML = "<p>Erreur de chargement.</p>";
       });
+  }
+  function supprimerDocument(id, collection) {
+    if (confirm("Supprimer ce CD ?")) {
+      db.collection(collection).doc(id).delete()
+        .then(() => {
+          alert("CD supprimé.");
+          location.reload();
+        })
+        .catch(error => {
+          console.error("Erreur lors de la suppression :", error);
+          alert("Erreur lors de la suppression.");
+        });
+    }
   }
   
   document.addEventListener('DOMContentLoaded', afficherCD);
