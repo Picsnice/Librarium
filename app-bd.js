@@ -23,19 +23,21 @@ const firebaseConfig = {
         }
   
         snapshot.forEach(doc => {
-          const bd = doc.data();
-          const bdDiv = document.createElement('div');
-          bdDiv.classList.add('livre');
-          bdDiv.innerHTML = `
-  <h3>${bd.title}</h3>
-  <p>Auteur(s) : ${bd.authors}</p>
-  ${bd.thumbnail ? `<img src="${bd.thumbnail}" alt="Couverture" style="max-height:150px;">` : ''}
-  <br>
-  <button onclick="supprimerDocument('${doc.id}', 'bd')">🗑️ Supprimer</button>
-`;
-
-          container.appendChild(bdDiv);
-        });
+            const bd = doc.data(); // ← Cette ligne est indispensable
+            const bdDiv = document.createElement('div');
+            bdDiv.classList.add('livre');
+          
+            bdDiv.innerHTML = `
+              <h3>${bd.title}</h3>
+              <p>Auteur(s) : ${bd.authors}</p>
+              ${bd.thumbnail ? `<img src="${bd.thumbnail}" alt="Couverture" style="max-height:150px;">` : ''}
+              <br>
+              <button onclick="supprimerDocument('${doc.id}', 'bd')">🗑️ Supprimer</button>
+            `;
+          
+            container.appendChild(bdDiv);
+          });
+          
       })
       .catch(err => {
         console.error("Erreur Firestore :", err);
