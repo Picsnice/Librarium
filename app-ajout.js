@@ -57,7 +57,7 @@ const firebaseConfig = {
               <h3>${title}</h3>
               <p>Artiste(s) : ${authors}</p>
               <p>Chargement de la pochette...</p>
-              <button onclick="ajouterLivre('${title.replace(/'/g, "\\'")}', '${authors.replace(/'/g, "\\'")}', '')">Ajouter à ma collection</button>
+              <button onclick="ajouterLivre('${title.replace(/'/g, "\\'")}', '${authors.replace(/'/g, "\\'")}', '', 'cd')">Ajouter à ma collection</button>
             `;
             resultsContainer.appendChild(resultDiv);
   
@@ -68,8 +68,9 @@ const firebaseConfig = {
                 const img = coverData.images?.[0]?.thumbnails?.large || coverData.images?.[0]?.image || '';
                 if (img) {
                   resultDiv.querySelector('p:nth-of-type(2)').insertAdjacentHTML('afterend', `<img src="${img}" alt="Pochette" style="max-height:150px;">`);
-                  resultDiv.querySelector('button').setAttribute('onclick', `ajouterLivre('${title.replace(/'/g, "\\'")}', '${authors.replace(/'/g, "\\'")}', '${img}')`);
-                }
+                  resultDiv.querySelector('button').setAttribute('onclick',
+                    `ajouterLivre('${title.replace(/'/g, "\\'")}', '${authors.replace(/'/g, "\\'")}', '${img}', 'cd')`);
+                                  }
               })
               .catch(() => {
                 // pas de pochette dispo, on laisse vide
@@ -118,9 +119,9 @@ const firebaseConfig = {
   
   
   // Ajouter dans Firestore
-  function ajouterLivre(title, authors, thumbnail) {
-    const type = document.getElementById('type').value;
-    const collectionName = type === 'bd' ? 'bd' : 'livres';
+  function ajouterLivre(title, authors, thumbnail, forcedType = null) {
+    const type = forcedType || document.getElementById('type').value;
+    const collectionName = type === 'bd' ? 'bd' : (type === 'cd' ? 'cd' : 'livres');
   
     db.collection(collectionName).add({
       title,
@@ -135,6 +136,6 @@ const firebaseConfig = {
     });
   }
   
-  // Rendre la fonction accessible
   window.ajouterLivre = ajouterLivre;
+  
   
