@@ -9,8 +9,8 @@ const firebaseConfig = {
   };
   
   // Initialisation Firebase
-  firebase.initializeApp(firebaseConfig);
-  const db = firebase.firestore();
+  window.firebase.initializeApp(firebaseConfig);
+  const db = window.firebase.firestore();
   
   // Afficher les livres
   function afficherLivres() {
