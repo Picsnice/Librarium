@@ -1,4 +1,3 @@
-const apiKey = 'AIzaSyD6ZoSkNp9fHsyWdJe0kB8uVqv9hC_oH9s';
 const searchForm = document.getElementById('search-form');
 const searchInput = document.getElementById('search-input');
 const typeSelector = document.getElementById('type');
@@ -17,7 +16,7 @@ searchForm.addEventListener('submit', function (e) {
 });
 
 function lancerRecherche(query) {
-  fetch(`https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(query)}&key=${apiKey}`)
+  fetch(`https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(query)}&key=AIzaSyD6ZoSkNp9fHsyWdJe0kB8uVqv9hC_oH9s`)
     .then(response => response.json())
     .then(data => {
       resultsContainer.innerHTML = '';
@@ -46,19 +45,24 @@ function lancerRecherche(query) {
     });
 }
 
-// ➕ Ajout du livre ou BD selon sélection
-function ajouterLivre(title, authors, thumbnail) {
-    const typeSelector = document.getElementById('type');
-    const type = typeSelector.value;
-    const livre = { title, authors, thumbnail };
-    let collectionKey = (type === 'bd') ? 'collectionBD' : 'collection';
-  
-    let collection = JSON.parse(localStorage.getItem(collectionKey)) || [];
-    collection.push(livre);
-    localStorage.setItem(collectionKey, JSON.stringify(collection));
+// ➕ Ajouter dans Firestore
+async function ajouterLivre(title, authors, thumbnail) {
+  const type = typeSelector.value;
+  const collectionName = type === 'bd' ? 'bd' : 'livres';
+
+  try {
+    const docRef = await window.db.collection(collectionName).add({
+      title,
+      authors,
+      thumbnail,
+      createdAt: new Date()
+    });
     alert(`"${title}" ajouté à votre collection de ${type === 'bd' ? 'BD' : 'livres'} !`);
+  } catch (error) {
+    console.error("Erreur lors de l'ajout dans Firestore :", error);
+    alert("Erreur lors de l'enregistrement. Vérifie ta connexion.");
   }
-  
+}
 
 // 📷 Scan via Html5Qrcode
 startScanButton.addEventListener('click', () => {
@@ -69,15 +73,13 @@ startScanButton.addEventListener('click', () => {
 
   Html5Qrcode.getCameras().then(devices => {
     if (devices && devices.length) {
-      const cameraId = devices[0].id;
-
       html5QrcodeScanner.start(
         { facingMode: "environment" },
         {
           fps: 10,
           qrbox: { width: 250, height: 100 }
         },
-        (decodedText, decodedResult) => {
+        (decodedText) => {
           html5QrcodeScanner.stop().then(() => {
             scannerDiv.innerHTML = "";
             startScanButton.style.display = "inline-block";
@@ -85,14 +87,11 @@ startScanButton.addEventListener('click', () => {
             searchInput.value = decodedText;
             lancerRecherche(decodedText);
           });
-        },
-        errorMessage => {
-          // Silencieux pour éviter les erreurs spam
         }
       );
     }
   }).catch(err => {
-    alert("Erreur accès caméra : " + err);
+    alert("Erreur d'accès à la caméra : " + err);
   });
 });
 
