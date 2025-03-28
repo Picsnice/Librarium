@@ -24,6 +24,8 @@ const firebaseConfig = {
   
         snapshot.forEach(doc => {
           const bd = doc.data();
+          const bdDiv = document.createElement('div');
+          bdDiv.classList.add('livre');
           bdDiv.innerHTML = `
   <h3>${bd.title}</h3>
   <p>Auteur(s) : ${bd.authors}</p>
