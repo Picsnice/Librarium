@@ -1,5 +1,22 @@
-import { addDoc, collection } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-firestore.js";
+// Import Firebase
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-app.js";
+import { getFirestore, addDoc, collection } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-firestore.js";
 
+// Configuration Firebase
+const firebaseConfig = {
+  apiKey: "AIzaSyCJ3jYAV_Gezs15BXksrlAltDreRyinsyo",
+  authDomain: "librarium-b4c0d.firebaseapp.com",
+  projectId: "librarium-b4c0d",
+  storageBucket: "librarium-b4c0d.firebasestorage.app",
+  messagingSenderId: "1441664273",
+  appId: "1:1441664273:web:fdcaa227a96992c5e0d0b0"
+};
+
+// Initialisation
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+// Récupération des éléments HTML
 const searchForm = document.getElementById('search-form');
 const searchInput = document.getElementById('search-input');
 const typeSelector = document.getElementById('type');
@@ -10,7 +27,7 @@ const scannerDiv = document.getElementById('scanner');
 
 let html5QrcodeScanner;
 
-// 🔍 Recherche manuelle
+// Recherche Google Books
 searchForm.addEventListener('submit', function (e) {
   e.preventDefault();
   const query = searchInput.value;
@@ -47,14 +64,13 @@ function lancerRecherche(query) {
     });
 }
 
-// ➕ Ajouter dans Firestore
+// Ajout du livre ou BD dans Firestore
 async function ajouterLivre(title, authors, thumbnail) {
   const type = typeSelector.value;
   const collectionName = type === 'bd' ? 'bd' : 'livres';
 
   try {
-    const docRef = await addDoc(collection(window.db, collectionName), {
-
+    await addDoc(collection(db, collectionName), {
       title,
       authors,
       thumbnail,
@@ -63,11 +79,11 @@ async function ajouterLivre(title, authors, thumbnail) {
     alert(`"${title}" ajouté à votre collection de ${type === 'bd' ? 'BD' : 'livres'} !`);
   } catch (error) {
     console.error("Erreur lors de l'ajout dans Firestore :", error);
-    alert("Erreur lors de l'enregistrement. Vérifie ta connexion.");
+    alert("Erreur lors de l'enregistrement.");
   }
 }
 
-// 📷 Scan via Html5Qrcode
+// Scanner ISBN
 startScanButton.addEventListener('click', () => {
   startScanButton.style.display = 'none';
   stopScanButton.style.display = 'inline-block';
@@ -78,10 +94,7 @@ startScanButton.addEventListener('click', () => {
     if (devices && devices.length) {
       html5QrcodeScanner.start(
         { facingMode: "environment" },
-        {
-          fps: 10,
-          qrbox: { width: 250, height: 100 }
-        },
+        { fps: 10, qrbox: { width: 250, height: 100 } },
         (decodedText) => {
           html5QrcodeScanner.stop().then(() => {
             scannerDiv.innerHTML = "";
