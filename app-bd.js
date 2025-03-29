@@ -81,7 +81,8 @@ const firebaseConfig = {
               <strong>Tome ${tome.tome}:</strong> ${tome.title}
               ${tome.thumbnail ? `<br><img src="${tome.thumbnail}" alt="Couverture" style="max-height:100px;">` : ''}
               <br>
-              <button onclick="supprimerDocument('${tome.id}', 'bd')">🗑️ Supprimer</button>
+              <button onclick="modifierDocument('${doc.id}', ${JSON.stringify(bd).replace(/'/g, "\\'")})">✏️ Modifier</button>
+              <button onclick="supprimerDocument('${doc.id}', 'bd')">🗑️ Supprimer</button>
               <hr>
             `;
             tomeDiv.style.display = 'none';
@@ -108,4 +109,42 @@ const firebaseConfig = {
   }
   
   document.addEventListener('DOMContentLoaded', afficherAlbums);
+  function modifierDocument(id, bd) {
+    const container = document.getElementById("bd");
+    const formDiv = document.createElement("div");
+    formDiv.style.border = "1px dashed #999";
+    formDiv.style.padding = "10px";
+    formDiv.style.margin = "10px 0";
+    formDiv.innerHTML = `
+      <h4>Modifier "${bd.title}"</h4>
+      <label>Titre : <input type="text" id="edit-title" value="${bd.title}"></label><br>
+      <label>Auteur(s) : <input type="text" id="edit-authors" value="${bd.authors}"></label><br>
+      <label>Éditeur : <input type="text" id="edit-publisher" value="${bd.publisher || ''}"></label><br>
+      <label>Série : <input type="text" id="edit-series" value="${bd.series || ''}"></label><br>
+      <label>Tome : <input type="number" id="edit-tome" value="${bd.tome || ''}"></label><br><br>
+      <button onclick="enregistrerModification('${id}')">💾 Enregistrer</button>
+      <button onclick="this.parentNode.remove()">❌ Annuler</button>
+    `;
+    container.prepend(formDiv);
+  }
   
+  function enregistrerModification(id) {
+    const updatedData = {
+      title: document.getElementById("edit-title").value,
+      authors: document.getElementById("edit-authors").value,
+      publisher: document.getElementById("edit-publisher").value,
+      series: document.getElementById("edit-series").value,
+      tome: parseInt(document.getElementById("edit-tome").value) || '',
+    };
+  
+    db.collection("bd").doc(id).update(updatedData)
+      .then(() => {
+        alert("BD mise à jour !");
+        location.reload();
+      })
+      .catch(err => {
+        console.error("Erreur lors de la mise à jour :", err);
+        alert("Échec de la mise à jour.");
+      });
+  }
+   
