@@ -5,14 +5,26 @@
   <title>Ma collection de BD</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    body {
-      font-family: sans-serif;
-      padding: 20px;
+    body { font-family: sans-serif; padding: 20px; }
+    .onglets button {
+      margin-right: 10px;
+      padding: 10px;
+      font-weight: bold;
+      cursor: pointer;
     }
     .livre {
       border: 1px solid #ccc;
       padding: 10px;
       margin: 10px 0;
+    }
+    .serie-title {
+      font-size: 1.2em;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 15px;
+    }
+    .tome {
+      margin-left: 20px;
     }
   </style>
 </head>
@@ -22,27 +34,18 @@
     <h1>📖 Ma collection de BD</h1>
     <a href="index.html">⬅ Retour à l'accueil</a>
     <a href="ajouter-livre.html?type=bd"><button>🔍 Ajouter une BD</button></a>
-    <div style="margin-top: 10px;">
-        <label for="tri">Trier par :</label>
-        <select id="tri">
-          <option value="createdAt">🕒 Date d’ajout</option>
-          <option value="title">📘 Titre</option>
-          <option value="authors">✍️ Auteur</option>
-          <option value="publisher">🏢 Éditeur</option>
-          <option value="series">📚 Série</option>
-        </select>
-      </div>
-      
-</header>
+  </header>
+
+  <div class="onglets" style="margin-top: 20px;">
+    <button onclick="afficherAlbums()">📚 Albums</button>
+    <button onclick="afficherSeries()">🗂️ Séries</button>
+  </div>
 
   <div id="bd"></div>
 
-  <!-- Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/11.5.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/11.5.0/firebase-firestore-compat.js"></script>
-
-  <!-- Script de lecture BD -->
-  <script src="app-bd.js?v=2"></script>
+  <script src="app-bd.js"></script>
 
 </body>
 </html>

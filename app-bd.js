@@ -1,4 +1,3 @@
-// Firebase config
 const firebaseConfig = {
     apiKey: "AIzaSyCJ3jYAV_Gezs15BXksrlAltDreRyinsyo",
     authDomain: "librarium-b4c0d.firebaseapp.com",
@@ -11,38 +10,86 @@ const firebaseConfig = {
   firebase.initializeApp(firebaseConfig);
   const db = firebase.firestore();
   
-  function afficherBD(critere = "createdAt") {
+  function afficherAlbums() {
     const container = document.getElementById("bd");
-    container.innerHTML = "";
+    container.innerHTML = "<h2>📚 Tous les Albums</h2>";
   
-    db.collection("bd").orderBy(critere).get()
+    db.collection("bd").orderBy("title").get()
       .then(snapshot => {
         if (snapshot.empty) {
-          container.innerHTML = "<p>Aucune BD dans votre collection.</p>";
+          container.innerHTML += "<p>Aucune BD.</p>";
           return;
         }
   
         snapshot.forEach(doc => {
           const bd = doc.data();
-          const bdDiv = document.createElement('div');
-          bdDiv.classList.add('livre');
-          bdDiv.innerHTML = `
-  <h3>${bd.title}</h3>
-  <p>Auteur(s) : ${bd.authors}</p>
-  ${bd.publisher ? `<p>Éditeur : ${bd.publisher}</p>` : ''}
-  ${bd.series ? `<p>Série : ${bd.series}</p>` : ''}
-  ${bd.tome ? `<p>Tome : ${bd.tome}</p>` : ''}
-  ${bd.thumbnail ? `<img src="${bd.thumbnail}" alt="Couverture" style="max-height:150px;">` : ''}
-  <br>
-  <button onclick="supprimerDocument('${doc.id}', 'bd')">🗑️ Supprimer</button>
-`;
-
-          container.appendChild(bdDiv);
+          const div = document.createElement('div');
+          div.classList.add('livre');
+          div.innerHTML = `
+            <h3>${bd.title}</h3>
+            <p>Auteur(s) : ${bd.authors}</p>
+            ${bd.publisher ? `<p>Éditeur : ${bd.publisher}</p>` : ''}
+            ${bd.series ? `<p>Série : ${bd.series}</p>` : ''}
+            ${bd.tome ? `<p>Tome : ${bd.tome}</p>` : ''}
+            ${bd.thumbnail ? `<img src="${bd.thumbnail}" alt="Couverture" style="max-height:150px;">` : ''}
+            <br>
+            <button onclick="supprimerDocument('${doc.id}', 'bd')">🗑️ Supprimer</button>
+          `;
+          container.appendChild(div);
         });
-      })
-      .catch(err => {
-        console.error("Erreur Firestore :", err);
-        container.innerHTML = "<p>Erreur de chargement.</p>";
+      });
+  }
+  
+  function afficherSeries() {
+    const container = document.getElementById("bd");
+    container.innerHTML = "<h2>🗂️ Séries</h2>";
+  
+    db.collection("bd").orderBy("series").orderBy("tome").get()
+      .then(snapshot => {
+        const seriesMap = {};
+  
+        snapshot.forEach(doc => {
+          const bd = doc.data();
+          if (!bd.series) return;
+          if (!seriesMap[bd.series]) seriesMap[bd.series] = [];
+          seriesMap[bd.series].push({ ...bd, id: doc.id });
+        });
+  
+        if (Object.keys(seriesMap).length === 0) {
+          container.innerHTML += "<p>Aucune série détectée.</p>";
+          return;
+        }
+  
+        Object.keys(seriesMap).forEach(serie => {
+          const serieDiv = document.createElement('div');
+          serieDiv.classList.add('serie');
+  
+          const title = document.createElement('div');
+          title.classList.add('serie-title');
+          title.textContent = serie;
+          title.onclick = () => {
+            const visible = serieDiv.querySelectorAll('.tome').length > 0;
+            serieDiv.querySelectorAll('.tome').forEach(t => t.style.display = visible ? 'none' : 'block');
+          };
+  
+          serieDiv.appendChild(title);
+  
+          seriesMap[serie].forEach(tome => {
+            const tomeDiv = document.createElement('div');
+            tomeDiv.classList.add('tome');
+            tomeDiv.innerHTML = `
+              <strong>Tome ${tome.tome}:</strong> ${tome.title}
+              ${tome.thumbnail ? `<br><img src="${tome.thumbnail}" alt="Couverture" style="max-height:100px;">` : ''}
+              <br>
+              <button onclick="supprimerDocument('${tome.id}', 'bd')">🗑️ Supprimer</button>
+              <hr>
+            `;
+            tomeDiv.style.display = 'none';
+            serieDiv.appendChild(tomeDiv);
+          });
+  
+          container.appendChild(serieDiv);
+        });
       });
   }
   
@@ -60,12 +107,5 @@ const firebaseConfig = {
     }
   }
   
-  document.addEventListener('DOMContentLoaded', () => {
-    afficherBD();
+  document.addEventListener('DOMContentLoaded', afficherAlbums);
   
-    const triSelect = document.getElementById('tri');
-    triSelect.addEventListener('change', () => {
-      afficherBD(triSelect.value);
-    });
-  });
-    
