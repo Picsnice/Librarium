@@ -179,15 +179,15 @@ const firebaseConfig = {
                           type === 'jeu' ? 'jeux' :
                           'livres';
   
-    const docData = {
-      title,
-      authors,
-      thumbnail,
-      publisher,
-      series,
-      tome,
-      createdAt: new Date()
-    };
+                          const docData = {
+                            title,
+                            authors,
+                            thumbnail,
+                            publisher,
+                            series,
+                            tome: tome && !isNaN(tome) ? parseInt(tome, 10) : '',
+                            createdAt: new Date()
+                          };
   
     db.collection(collectionName).add(docData)
       .then(() => {
