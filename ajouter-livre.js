@@ -35,33 +35,62 @@ searchForm.addEventListener('submit', function (e) {
 });
 
 function lancerRecherche(query) {
-  fetch(`https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(query)}&key=AIzaSyD6ZoSkNp9fHsyWdJe0kB8uVqv9hC_oH9s`)
-    .then(response => response.json())
-    .then(data => {
-      resultsContainer.innerHTML = '';
-      if (!data.items || data.items.length === 0) {
-        resultsContainer.innerHTML = '<p>Aucun résultat trouvé.</p>';
-        return;
+// Recherche via Google Books (livres et BD)
+fetch(`https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(query)}&key=AIzaSyD6ZoSkNp9fHsyWdJe0kB8uVqv9hC_oH9s`)
+  .then(response => response.json())
+  .then(data => {
+    if (!data.items || data.items.length === 0) {
+      resultsContainer.innerHTML = '<p>Aucun résultat trouvé.</p>';
+      return;
+    }
+
+    data.items.forEach(item => {
+      const book = item.volumeInfo;
+      const title = book.title;
+      const authors = book.authors ? book.authors.join(', ') : 'Inconnu';
+      const thumbnail = book.imageLinks?.thumbnail || '';
+      const publisher = book.publisher || '';
+      const fullTitle = book.title || '';
+
+      // Extraction série et tome pour BD
+      let series = '';
+      let tome = '';
+
+      if (type === 'bd') {
+        const match = fullTitle.match(/^(.*?)(?:\s[-–]\s)?(?:Tome|T|T\.)?\s?#?(\d{1,3})/i);
+        if (match) {
+          series = match[1].trim();
+          tome = match[2];
+        }
       }
 
-      data.items.forEach(item => {
-        const book = item.volumeInfo;
-        const bookElement = document.createElement('div');
-        bookElement.classList.add('book-result');
-        bookElement.innerHTML = `
-          <h3>${book.title}</h3>
-          <p>Auteur(s) : ${book.authors ? book.authors.join(', ') : 'Inconnu'}</p>
-          <img src="${book.imageLinks?.thumbnail || ''}" alt="Couverture" style="max-height:150px;">
-          <p>${book.description ? book.description.substring(0, 150) + '...' : 'Pas de description disponible'}</p>
-          <button onclick="ajouterLivre('${book.title.replace(/'/g, "\\'")}', '${(book.authors ? book.authors.join(', ') : 'Inconnu').replace(/'/g, "\\'")}', '${book.imageLinks?.thumbnail || ''}')">Ajouter à ma collection</button>
-        `;
-        resultsContainer.appendChild(bookElement);
-      });
-    })
-    .catch(err => {
-      console.error('Erreur API', err);
-      resultsContainer.innerHTML = '<p>Une erreur est survenue lors de la recherche.</p>';
+      const bookElement = document.createElement('div');
+      bookElement.classList.add('book-result');
+      bookElement.innerHTML = `
+        <h3>${title}</h3>
+        <p>Auteur(s) : ${authors}</p>
+        ${publisher ? `<p>Éditeur : ${publisher}</p>` : ''}
+        ${series ? `<p>Série : ${series}</p>` : ''}
+        ${tome ? `<p>Tome : ${tome}</p>` : ''}
+        ${thumbnail ? `<img src="${thumbnail}" alt="Couverture" style="max-height:150px;">` : ''}
+        <p>${book.description ? book.description.substring(0, 150) + '...' : 'Pas de description disponible'}</p>
+        <button onclick="ajouterLivre(
+          '${title.replace(/'/g, "\\'")}', 
+          '${authors.replace(/'/g, "\\'")}', 
+          '${thumbnail}', 
+          '${type}', 
+          '${publisher.replace(/'/g, "\\'")}', 
+          '${series.replace(/'/g, "\\'")}', 
+          '${tome}')">Ajouter à ma collection</button>
+      `;
+      resultsContainer.appendChild(bookElement);
     });
+  })
+  .catch(err => {
+    console.error('Erreur API Google Books', err);
+    resultsContainer.innerHTML = '<p>Erreur lors de la recherche.</p>';
+  });
+
 }
 
 // Fonction pour ajouter un livre ou une BD dans Firestore

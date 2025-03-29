@@ -144,29 +144,37 @@ const firebaseConfig = {
   
   
   // Ajouter dans Firestore
-  function ajouterLivre(title, authors, thumbnail, forcedType = null) {
+  function ajouterLivre(title, authors, thumbnail, forcedType = null, publisher = '', series = '', tome = '') {
     const type = forcedType || document.getElementById('type').value;
+  
     const collectionName = type === 'bd' ? 'bd' :
-                      type === 'cd' ? 'cd' :
-                      type === 'vinyle' ? 'vinyles' :
-                      type === 'jeu' ? 'jeux' :
-                      'livres';
-
-
-    db.collection(collectionName).add({
+                          type === 'cd' ? 'cd' :
+                          type === 'vinyle' ? 'vinyles' :
+                          type === 'jeu' ? 'jeux' :
+                          'livres';
+  
+    const docData = {
       title,
       authors,
       thumbnail,
+      publisher,
+      series,
+      tome,
       createdAt: new Date()
-    }).then(() => {
-      alert(`"${title}" ajouté à votre collection de ${collectionName} !`);
-    }).catch((error) => {
-      console.error("Erreur Firestore :", error);
-      alert("Erreur lors de l'ajout.");
-    });
+    };
+  
+    db.collection(collectionName).add(docData)
+      .then(() => {
+        alert(`"${title}" ajouté à votre collection de ${collectionName} !`);
+      })
+      .catch((error) => {
+        console.error("Erreur Firestore :", error);
+        alert("Erreur lors de l'ajout.");
+      });
   }
   
   window.ajouterLivre = ajouterLivre;
+  
   // Détection type via URL
 const urlParams = new URLSearchParams(window.location.search);
 const preselectedType = urlParams.get('type');
