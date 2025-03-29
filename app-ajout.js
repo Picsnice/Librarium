@@ -27,7 +27,39 @@ const firebaseConfig = {
     const resultsContainer = document.getElementById('results');
     resultsContainer.innerHTML = '';
   
-    if (type === 'cd' || type === 'vinyle') {
+    if (type === 'cd' || type === 'vinyle' || type === 'jeu') {
+        if (type === 'jeu') {
+            fetch(`https://api.rawg.io/api/games?key=a14c3397b9134a3c8f97f361ce178aff&search=${encodeURIComponent(query)}&page_size=10`)
+              .then(response => response.json())
+              .then(data => {
+                if (!data.results || data.results.length === 0) {
+                  resultsContainer.innerHTML = '<p>Aucun jeu trouvé.</p>';
+                  return;
+                }
+          
+                data.results.forEach(game => {
+                  const title = game.name;
+                  const authors = game.developers?.map(dev => dev.name).join(', ') || 'Inconnu';
+                  const img = game.background_image || '';
+          
+                  const div = document.createElement('div');
+                  div.classList.add('book-result');
+                  div.innerHTML = `
+                    <h3>${title}</h3>
+                    <p>Développeur(s) : ${authors}</p>
+                    ${img ? `<img src="${img}" alt="Visuel jeu" style="max-height:150px;">` : ''}
+                    <button onclick="ajouterLivre('${title.replace(/'/g, "\\'")}', '${authors.replace(/'/g, "\\'")}', '${img}', 'jeu')">Ajouter à ma collection</button>
+                  `;
+                  resultsContainer.appendChild(div);
+                });
+              })
+              .catch(err => {
+                console.error("Erreur API jeux vidéo :", err);
+                resultsContainer.innerHTML = '<p>Erreur lors de la recherche jeu vidéo.</p>';
+              });
+            return;
+          }
+          
         // Recherche via MusicBrainz
       fetch(`https://musicbrainz.org/ws/2/release/?query=${encodeURIComponent(query)}&fmt=json&limit=10`)
         .then(response => response.json())
