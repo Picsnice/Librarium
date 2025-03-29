@@ -13,11 +13,11 @@ const firebaseConfig = {
   const db = firebase.firestore();
   
   // Afficher les livres
-  function afficherLivres() {
+  function afficherLivres(critere = "createdAt") {
     const container = document.getElementById("livres");
     container.innerHTML = "";
   
-    db.collection("livres").orderBy("createdAt", "desc").get()
+    db.collection("livres").orderBy(critere).get()
       .then(snapshot => {
         if (snapshot.empty) {
           container.innerHTML = "<p>Aucun livre dans votre collection.</p>";
@@ -29,13 +29,13 @@ const firebaseConfig = {
           const livreDiv = document.createElement('div');
           livreDiv.classList.add('livre');
           livreDiv.innerHTML = `
-          <h3>${livre.title}</h3>
-          <p>Auteur(s) : ${livre.authors}</p>
-          ${livre.thumbnail ? `<img src="${livre.thumbnail}" alt="Couverture" style="max-height:150px;">` : ''}
-          <br>
-          <button onclick="supprimerDocument('${doc.id}', 'livres')">🗑️ Supprimer</button>
-        `;
-        
+            <h3>${livre.title}</h3>
+            <p>Auteur(s) : ${livre.authors}</p>
+            ${livre.publisher ? `<p>Éditeur : ${livre.publisher}</p>` : ''}
+            ${livre.thumbnail ? `<img src="${livre.thumbnail}" alt="Couverture" style="max-height:150px;">` : ''}
+            <br>
+            <button onclick="supprimerDocument('${doc.id}', 'livres')">🗑️ Supprimer</button>
+          `;
           container.appendChild(livreDiv);
         });
       })
@@ -44,6 +44,7 @@ const firebaseConfig = {
         container.innerHTML = "<p>Erreur de chargement.</p>";
       });
   }
+  
   function supprimerDocument(id, collection) {
     if (confirm("Supprimer ce document ?")) {
       db.collection(collection).doc(id).delete()
@@ -57,6 +58,14 @@ const firebaseConfig = {
         });
     }
   }
+ 
+  document.addEventListener('DOMContentLoaded', () => {
+    afficherLivres();
   
-  document.addEventListener('DOMContentLoaded', afficherLivres);
+    const triSelect = document.getElementById('tri');
+    triSelect.addEventListener('change', () => {
+      afficherLivres(triSelect.value);
+    });
+  });
+  
   
