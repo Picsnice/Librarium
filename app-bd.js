@@ -27,14 +27,16 @@ const firebaseConfig = {
           const bdDiv = document.createElement('div');
           bdDiv.classList.add('livre');
           bdDiv.innerHTML = `
-            <h3>${bd.title}</h3>
-            <p>Auteur(s) : ${bd.authors}</p>
-            ${bd.publisher ? `<p>Éditeur : ${bd.publisher}</p>` : ''}
-            ${bd.series ? `<p>Série : ${bd.series}</p>` : ''}
-            ${bd.thumbnail ? `<img src="${bd.thumbnail}" alt="Couverture" style="max-height:150px;">` : ''}
-            <br>
-            <button onclick="supprimerDocument('${doc.id}', 'bd')">🗑️ Supprimer</button>
-          `;
+  <h3>${bd.title}</h3>
+  <p>Auteur(s) : ${bd.authors}</p>
+  ${bd.publisher ? `<p>Éditeur : ${bd.publisher}</p>` : ''}
+  ${bd.series ? `<p>Série : ${bd.series}</p>` : ''}
+  ${bd.tome ? `<p>Tome : ${bd.tome}</p>` : ''}
+  ${bd.thumbnail ? `<img src="${bd.thumbnail}" alt="Couverture" style="max-height:150px;">` : ''}
+  <br>
+  <button onclick="supprimerDocument('${doc.id}', 'bd')">🗑️ Supprimer</button>
+`;
+
           container.appendChild(bdDiv);
         });
       })
