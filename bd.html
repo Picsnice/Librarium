@@ -22,6 +22,17 @@
     <h1>📖 Ma collection de BD</h1>
     <a href="index.html">⬅ Retour à l'accueil</a>
     <a href="ajouter-livre.html?type=bd"><button>🔍 Ajouter une BD</button></a>
+    <div style="margin-top: 10px;">
+        <label for="tri">Trier par :</label>
+        <select id="tri">
+          <option value="createdAt">🕒 Date d’ajout</option>
+          <option value="title">📘 Titre</option>
+          <option value="authors">✍️ Auteur</option>
+          <option value="publisher">🏢 Éditeur</option>
+          <option value="series">📚 Série</option>
+        </select>
+      </div>
+      
 </header>
 
   <div id="bd"></div>

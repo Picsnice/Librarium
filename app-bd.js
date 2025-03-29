@@ -11,11 +11,11 @@ const firebaseConfig = {
   firebase.initializeApp(firebaseConfig);
   const db = firebase.firestore();
   
-  function afficherBD() {
+  function afficherBD(critere = "createdAt") {
     const container = document.getElementById("bd");
     container.innerHTML = "";
   
-    db.collection("bd").orderBy("createdAt", "desc").get()
+    db.collection("bd").orderBy(critere).get()
       .then(snapshot => {
         if (snapshot.empty) {
           container.innerHTML = "<p>Aucune BD dans votre collection.</p>";
@@ -23,27 +23,27 @@ const firebaseConfig = {
         }
   
         snapshot.forEach(doc => {
-            const bd = doc.data(); // ← Cette ligne est indispensable
-            const bdDiv = document.createElement('div');
-            bdDiv.classList.add('livre');
-          
-            bdDiv.innerHTML = `
-              <h3>${bd.title}</h3>
-              <p>Auteur(s) : ${bd.authors}</p>
-              ${bd.thumbnail ? `<img src="${bd.thumbnail}" alt="Couverture" style="max-height:150px;">` : ''}
-              <br>
-              <button onclick="supprimerDocument('${doc.id}', 'bd')">🗑️ Supprimer</button>
-            `;
-          
-            container.appendChild(bdDiv);
-          });
-          
+          const bd = doc.data();
+          const bdDiv = document.createElement('div');
+          bdDiv.classList.add('livre');
+          bdDiv.innerHTML = `
+            <h3>${bd.title}</h3>
+            <p>Auteur(s) : ${bd.authors}</p>
+            ${bd.publisher ? `<p>Éditeur : ${bd.publisher}</p>` : ''}
+            ${bd.series ? `<p>Série : ${bd.series}</p>` : ''}
+            ${bd.thumbnail ? `<img src="${bd.thumbnail}" alt="Couverture" style="max-height:150px;">` : ''}
+            <br>
+            <button onclick="supprimerDocument('${doc.id}', 'bd')">🗑️ Supprimer</button>
+          `;
+          container.appendChild(bdDiv);
+        });
       })
       .catch(err => {
         console.error("Erreur Firestore :", err);
         container.innerHTML = "<p>Erreur de chargement.</p>";
       });
   }
+  
   function supprimerDocument(id, collection) {
     if (confirm("Supprimer cette BD ?")) {
       db.collection(collection).doc(id).delete()
@@ -58,5 +58,12 @@ const firebaseConfig = {
     }
   }
   
-  document.addEventListener('DOMContentLoaded', afficherBD);
+  document.addEventListener('DOMContentLoaded', () => {
+    afficherBD();
   
+    const triSelect = document.getElementById('tri');
+    triSelect.addEventListener('change', () => {
+      afficherBD(triSelect.value);
+    });
+  });
+    
