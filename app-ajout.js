@@ -48,7 +48,7 @@ const firebaseConfig = {
                     <h3>${title}</h3>
                     <p>Développeur(s) : ${authors}</p>
                     ${img ? `<img src="${img}" alt="Visuel jeu" style="max-height:150px;">` : ''}
-                    <button onclick="ajouterLivre('${title.replace(/'/g, "\\'")}', '${authors.replace(/'/g, "\\'")}', '${img}', 'jeu')">
+                    <button onclick="ajouterLivre('${title.replace(/'/g, "\\'")}', '${authors.replace(/'/g, "\\'")}', '${img}', 'jeu')">Ajouter à ma collection</button>
                   `;
                   resultsContainer.appendChild(div);
                 });
