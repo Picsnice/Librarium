@@ -35,12 +35,14 @@ const firebaseConfig = {
             ${bd.tome ? `<p>Tome : ${bd.tome}</p>` : ''}
             ${bd.thumbnail ? `<img src="${bd.thumbnail}" alt="Couverture" style="max-height:150px;">` : ''}
             <br>
+            <button onclick="modifierDocument('${doc.id}', ${JSON.stringify(bd).replace(/'/g, "\\'")})">✏️ Modifier</button>
             <button onclick="supprimerDocument('${doc.id}', 'bd')">🗑️ Supprimer</button>
           `;
           container.appendChild(div);
         });
       });
   }
+  
   
   function afficherSeries() {
     const container = document.getElementById("bd");
