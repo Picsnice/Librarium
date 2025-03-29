@@ -1,14 +1,3 @@
-// Détection type via URL
-const urlParams = new URLSearchParams(window.location.search);
-const preselectedType = urlParams.get('type');
-if (preselectedType) {
-  document.addEventListener('DOMContentLoaded', () => {
-    const typeSelect = document.getElementById('type');
-    if (typeSelect) {
-      typeSelect.value = preselectedType;
-    }
-  });
-}
 
 // Config Firebase
 const firebaseConfig = {
@@ -143,5 +132,16 @@ const firebaseConfig = {
   }
   
   window.ajouterLivre = ajouterLivre;
-  
+  // Détection type via URL
+const urlParams = new URLSearchParams(window.location.search);
+const preselectedType = urlParams.get('type');
+if (preselectedType) {
+  document.addEventListener('DOMContentLoaded', () => {
+    const typeSelect = document.getElementById('type');
+    if (typeSelect) {
+      typeSelect.value = preselectedType;
+    }
+  });
+}
+
   
