@@ -108,7 +108,6 @@ const firebaseConfig = {
     }
   }
   
-  document.addEventListener('DOMContentLoaded', afficherAlbums);
   function modifierDocument(id, bd) {
     const container = document.getElementById("bd");
     const formDiv = document.createElement("div");
@@ -147,4 +146,5 @@ const firebaseConfig = {
         alert("Échec de la mise à jour.");
       });
   }
-   
+document.addEventListener('DOMContentLoaded', afficherAlbums);
+  
