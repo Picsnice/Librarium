@@ -151,4 +151,6 @@ const firebaseConfig = {
       });
   }
 document.addEventListener('DOMContentLoaded', afficherAlbums);
+window.modifierDocument = modifierDocument;
+window.enregistrerModification = enregistrerModification;
   
