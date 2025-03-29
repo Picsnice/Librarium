@@ -147,8 +147,11 @@ const firebaseConfig = {
   function ajouterLivre(title, authors, thumbnail, forcedType = null) {
     const type = forcedType || document.getElementById('type').value;
     const collectionName = type === 'bd' ? 'bd' :
-    type === 'cd' ? 'cd' :
-    type === 'vinyle' ? 'vinyles' : 'livres';
+                      type === 'cd' ? 'cd' :
+                      type === 'vinyle' ? 'vinyles' :
+                      type === 'jeu' ? 'jeux' :
+                      'livres';
+
 
     db.collection(collectionName).add({
       title,
