@@ -66,9 +66,16 @@ const firebaseConfig = {
   
         snapshot.forEach(doc => {
           const bd = doc.data();
-          if (!bd.series) return;
-          if (!seriesMap[bd.series]) seriesMap[bd.series] = [];
-          seriesMap[bd.series].push({ ...bd, id: doc.id });
+          if (!bd.series || !bd.series.trim()) return;
+  
+          const seriesKey = bd.series.trim().toLowerCase();
+          if (!seriesMap[seriesKey]) {
+            seriesMap[seriesKey] = {
+              name: bd.series.trim(),
+              tomes: []
+            };
+          }
+          seriesMap[seriesKey].tomes.push({ ...bd, id: doc.id });
         });
   
         if (Object.keys(seriesMap).length === 0) {
@@ -76,29 +83,28 @@ const firebaseConfig = {
           return;
         }
   
-        Object.keys(seriesMap).forEach(serie => {
+        Object.values(seriesMap).forEach(serieObj => {
           const serieDiv = document.createElement('div');
           serieDiv.classList.add('serie');
   
           const title = document.createElement('div');
           title.classList.add('serie-title');
-          title.textContent = serie;
+          title.textContent = serieObj.name;
           title.onclick = () => {
-            const visible = serieDiv.querySelectorAll('.tome').length > 0;
+            const visible = serieDiv.querySelectorAll('.tome')[0]?.style.display !== 'none';
             serieDiv.querySelectorAll('.tome').forEach(t => t.style.display = visible ? 'none' : 'block');
           };
   
           serieDiv.appendChild(title);
   
-          seriesMap[serie].forEach(tome => {
+          serieObj.tomes.forEach(tome => {
             const tomeDiv = document.createElement('div');
             tomeDiv.classList.add('tome');
             tomeDiv.innerHTML = `
               <strong>Tome ${tome.tome}:</strong> ${tome.title}
               ${tome.thumbnail ? `<br><img src="${tome.thumbnail}" alt="Couverture" style="max-height:100px;">` : ''}
               <br>
-              <button onclick="modifierDocument('${doc.id}', ${JSON.stringify(bd).replace(/'/g, "\\'")})">✏️ Modifier</button>
-              <button onclick="supprimerDocument('${doc.id}', 'bd')">🗑️ Supprimer</button>
+              <button onclick="supprimerDocument('${tome.id}', 'bd')">🗑️ Supprimer</button>
               <hr>
             `;
             tomeDiv.style.display = 'none';
@@ -109,6 +115,7 @@ const firebaseConfig = {
         });
       });
   }
+  
   
   function supprimerDocument(id, collection) {
     if (confirm("Supprimer cette BD ?")) {
