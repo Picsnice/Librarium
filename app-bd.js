@@ -27,6 +27,8 @@ const firebaseConfig = {
           const bd = doc.data();
           const div = document.createElement('div');
           div.classList.add('livre');
+  
+          // Génération d’un bloc avec data-attributes
           div.innerHTML = `
             <h3>${bd.title}</h3>
             <p>Auteur(s) : ${bd.authors}</p>
@@ -35,13 +37,23 @@ const firebaseConfig = {
             ${bd.tome ? `<p>Tome : ${bd.tome}</p>` : ''}
             ${bd.thumbnail ? `<img src="${bd.thumbnail}" alt="Couverture" style="max-height:150px;">` : ''}
             <br>
-            <button onclick="modifierDocument('${doc.id}', ${JSON.stringify(bd).replace(/'/g, "\\'")})">✏️ Modifier</button>
+            <button onclick="modifierDocument('${doc.id}', this)">✏️ Modifier</button>
             <button onclick="supprimerDocument('${doc.id}', 'bd')">🗑️ Supprimer</button>
           `;
+          
+          // Ajout des données au bouton
+          const modifierBtn = div.querySelector("button");
+          modifierBtn.dataset.title = bd.title;
+          modifierBtn.dataset.authors = bd.authors;
+          modifierBtn.dataset.publisher = bd.publisher || '';
+          modifierBtn.dataset.series = bd.series || '';
+          modifierBtn.dataset.tome = bd.tome || '';
+  
           container.appendChild(div);
         });
       });
   }
+  
   
   
   function afficherSeries() {
@@ -112,24 +124,28 @@ const firebaseConfig = {
     }
   }
   
-  function modifierDocument(id, bd) {
+  function modifierDocument(id, button) {
     const container = document.getElementById("bd");
+  
     const formDiv = document.createElement("div");
     formDiv.style.border = "1px dashed #999";
     formDiv.style.padding = "10px";
     formDiv.style.margin = "10px 0";
+  
     formDiv.innerHTML = `
-      <h4>Modifier "${bd.title}"</h4>
-      <label>Titre : <input type="text" id="edit-title" value="${bd.title}"></label><br>
-      <label>Auteur(s) : <input type="text" id="edit-authors" value="${bd.authors}"></label><br>
-      <label>Éditeur : <input type="text" id="edit-publisher" value="${bd.publisher || ''}"></label><br>
-      <label>Série : <input type="text" id="edit-series" value="${bd.series || ''}"></label><br>
-      <label>Tome : <input type="number" id="edit-tome" value="${bd.tome || ''}"></label><br><br>
+      <h4>Modifier "${button.dataset.title}"</h4>
+      <label>Titre : <input type="text" id="edit-title" value="${button.dataset.title}"></label><br>
+      <label>Auteur(s) : <input type="text" id="edit-authors" value="${button.dataset.authors}"></label><br>
+      <label>Éditeur : <input type="text" id="edit-publisher" value="${button.dataset.publisher}"></label><br>
+      <label>Série : <input type="text" id="edit-series" value="${button.dataset.series}"></label><br>
+      <label>Tome : <input type="number" id="edit-tome" value="${button.dataset.tome}"></label><br><br>
       <button onclick="enregistrerModification('${id}')">💾 Enregistrer</button>
       <button onclick="this.parentNode.remove()">❌ Annuler</button>
     `;
+  
     container.prepend(formDiv);
   }
+  
   
   function enregistrerModification(id) {
     const updatedData = {
