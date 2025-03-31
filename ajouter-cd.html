@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ajouter un CD ou Vinyle</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <h1>🎵 Ajouter un CD ou Vinyle</h1>
+    <a href="index.html">⬅ Retour à l'accueil</a>
+  </header>
+
+  <form id="search-form">
+    <label for="type">Type :</label>
+    <select id="type">
+      <option value="cd">💿 CD</option>
+      <option value="vinyle">📀 Vinyle</option>
+    </select>
+
+    <input type="text" id="search-input" placeholder="Titre ou artiste" required />
+    <button type="submit">Rechercher</button>
+  </form>
+
+  <div id="results"></div>
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/11.5.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/11.5.0/firebase-firestore-compat.js"></script>
+  <!-- Script -->
+  <script type="module" src="ajouter-livre.js"></script>
+</body>
+</html>
