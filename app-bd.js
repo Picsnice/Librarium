@@ -1,4 +1,4 @@
-alert("Script app-bd.js v9999 chargé !");
+
 
 const firebaseConfig = {
     apiKey: "AIzaSyCJ3jYAV_Gezs15BXksrlAltDreRyinsyo",
