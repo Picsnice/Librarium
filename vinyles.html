@@ -11,11 +11,16 @@
 </head>
 <body>
 
-  <header>
-    <h1>💿 Ma collection de Vinyles</h1>
-    <a href="index.html">⬅ Retour à l'accueil</a>
-    <a href="ajouter-livre.html?type=vinyle"><button>🔍 Ajouter un vinyle</button></a>
-  </header>
+    <header>
+        <h1>🎶 Ma collection de Vinyles</h1>
+        <a href="index.html">⬅ Retour à l'accueil</a>
+        <button id="go-to-search">🔍 Ajouter un vinyle</button>
+        <div>
+          <button onclick="afficherAlbums()">📚 Albums</button>
+          <button onclick="afficherArtistes()">🎤 Artistes</button>
+        </div>
+      </header>
+      
 
   <div id="vinyles"></div>
 
