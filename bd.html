@@ -40,7 +40,20 @@
     <button onclick="afficherAlbums()">📚 Albums</button>
     <button onclick="afficherSeries()">🗂️ Séries</button>
   </div>
-
+  <div id="filtres" style="margin-bottom: 20px;">
+    <label for="tri">Trier par :</label>
+    <select id="tri" onchange="afficherAlbums()">
+      <option value="title">Titre</option>
+      <option value="authors">Auteur</option>
+      <option value="publisher">Éditeur</option>
+      <option value="series">Série</option>
+      <option value="tome">Tome</option>
+    </select>
+  
+    <label for="recherche" style="margin-left: 20px;">Filtrer :</label>
+    <input type="text" id="recherche" placeholder="Tapez un mot-clé" oninput="afficherAlbums()">
+  </div>
+  
   <div id="bd"></div>
 
   <script src="https://www.gstatic.com/firebasejs/11.5.0/firebase-app-compat.js"></script>

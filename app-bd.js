@@ -14,9 +14,11 @@ const firebaseConfig = {
   
   function afficherAlbums() {
     const container = document.getElementById("bd");
+    const tri = document.getElementById("tri")?.value || "title";
+    const filtre = document.getElementById("recherche")?.value?.toLowerCase() || "";
     container.innerHTML = "<h2>📚 Tous les Albums</h2>";
   
-    db.collection("bd").orderBy("title").get()
+    db.collection("bd").orderBy(tri).get()
       .then(snapshot => {
         if (snapshot.empty) {
           container.innerHTML += "<p>Aucune BD.</p>";
@@ -25,10 +27,11 @@ const firebaseConfig = {
   
         snapshot.forEach(doc => {
           const bd = doc.data();
+          const texte = `${bd.title} ${bd.authors} ${bd.publisher || ''} ${bd.series || ''}`.toLowerCase();
+          if (filtre && !texte.includes(filtre)) return;
+  
           const div = document.createElement('div');
           div.classList.add('livre');
-  
-          // Génération d’un bloc avec data-attributes
           div.innerHTML = `
             <h3>${bd.title}</h3>
             <p>Auteur(s) : ${bd.authors}</p>
@@ -40,19 +43,18 @@ const firebaseConfig = {
             <button onclick="modifierDocument('${doc.id}', this)">✏️ Modifier</button>
             <button onclick="supprimerDocument('${doc.id}', 'bd')">🗑️ Supprimer</button>
           `;
-          
-          // Ajout des données au bouton
-          const modifierBtn = div.querySelector("button");
-          modifierBtn.dataset.title = bd.title;
-          modifierBtn.dataset.authors = bd.authors;
-          modifierBtn.dataset.publisher = bd.publisher || '';
-          modifierBtn.dataset.series = bd.series || '';
-          modifierBtn.dataset.tome = bd.tome || '';
+  
+          div.querySelector("button").dataset.title = bd.title;
+          div.querySelector("button").dataset.authors = bd.authors;
+          div.querySelector("button").dataset.publisher = bd.publisher || '';
+          div.querySelector("button").dataset.series = bd.series || '';
+          div.querySelector("button").dataset.tome = bd.tome || '';
   
           container.appendChild(div);
         });
       });
   }
+  
   
   
   
