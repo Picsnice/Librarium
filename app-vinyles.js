@@ -10,6 +10,33 @@ const firebaseConfig = {
   firebase.initializeApp(firebaseConfig);
   const db = firebase.firestore();
   
+  function afficherAlbums() {
+    const container = document.getElementById("vinyle");
+    container.innerHTML = "<h2>📚 Tous les Albums</h2>";
+  
+    db.collection("vinyle").get().then(snapshot => {
+      if (snapshot.empty) {
+        container.innerHTML += "<p>Aucun vinyle.</p>";
+        return;
+      }
+  
+      snapshot.forEach(doc => {
+        const vinyle = doc.data();
+        const div = document.createElement('div');
+        div.classList.add('livre');
+        div.innerHTML = `
+          <h3>${vinyle.title}</h3>
+          <p>Artiste : ${vinyle.authors}</p>
+          ${vinyle.publisher ? `<p>Label : ${vinyle.publisher}</p>` : ''}
+          ${vinyle.thumbnail ? `<img src="${vinyle.thumbnail}" alt="Couverture" style="max-height:150px;">` : ''}
+          <br>
+          <button onclick="supprimerDocument('${doc.id}', 'vinyle')">🗑️ Supprimer</button>
+        `;
+        container.appendChild(div);
+      });
+    });
+  }
+  
   function afficherVinyles() {
     const container = document.getElementById("vinyles");
     container.innerHTML = "";
