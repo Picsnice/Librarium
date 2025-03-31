@@ -115,4 +115,7 @@ const firebaseConfig = {
         });
       });
   }
+  document.addEventListener("DOMContentLoaded", afficherAlbums);
+  window.afficherAlbums = afficherAlbums;
+  window.afficherArtistes = afficherArtistes;
   
