@@ -108,4 +108,4 @@ const firebaseConfig = {
         alert("Erreur lors de l'ajout.");
       });
   }
-  
+  window.ajouterLivre = ajouterLivre;
