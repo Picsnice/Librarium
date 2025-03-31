@@ -18,18 +18,31 @@ const firebaseConfig = {
     const filtre = document.getElementById("recherche")?.value?.toLowerCase() || "";
     container.innerHTML = "<h2>📚 Tous les Albums</h2>";
   
-    db.collection("bd").orderBy(tri).get()
+    db.collection("bd").get()
       .then(snapshot => {
-        if (snapshot.empty) {
-          container.innerHTML += "<p>Aucune BD.</p>";
+        const bds = [];
+  
+        snapshot.forEach(doc => {
+          const bd = { ...doc.data(), id: doc.id };
+          const texte = `${bd.title} ${bd.authors} ${bd.publisher || ''} ${bd.series || ''}`.toLowerCase();
+          if (!filtre || texte.includes(filtre)) {
+            bds.push(bd);
+          }
+        });
+  
+        bds.sort((a, b) => {
+          const valA = (a[tri] || '').toString().toLowerCase();
+          const valB = (b[tri] || '').toString().toLowerCase();
+          if (tri === "tome") return (parseInt(a.tome) || 0) - (parseInt(b.tome) || 0);
+          return valA.localeCompare(valB);
+        });
+  
+        if (bds.length === 0) {
+          container.innerHTML += "<p>Aucune BD trouvée.</p>";
           return;
         }
   
-        snapshot.forEach(doc => {
-          const bd = doc.data();
-          const texte = `${bd.title} ${bd.authors} ${bd.publisher || ''} ${bd.series || ''}`.toLowerCase();
-          if (filtre && !texte.includes(filtre)) return;
-  
+        bds.forEach(bd => {
           const div = document.createElement('div');
           div.classList.add('livre');
           div.innerHTML = `
@@ -40,8 +53,8 @@ const firebaseConfig = {
             ${bd.tome ? `<p>Tome : ${bd.tome}</p>` : ''}
             ${bd.thumbnail ? `<img src="${bd.thumbnail}" alt="Couverture" style="max-height:150px;">` : ''}
             <br>
-            <button onclick="modifierDocument('${doc.id}', this)">✏️ Modifier</button>
-            <button onclick="supprimerDocument('${doc.id}', 'bd')">🗑️ Supprimer</button>
+            <button onclick="modifierDocument('${bd.id}', this)">✏️ Modifier</button>
+            <button onclick="supprimerDocument('${bd.id}', 'bd')">🗑️ Supprimer</button>
           `;
   
           div.querySelector("button").dataset.title = bd.title;
@@ -54,6 +67,7 @@ const firebaseConfig = {
         });
       });
   }
+  
   
   
   
