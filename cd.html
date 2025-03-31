@@ -18,11 +18,16 @@
 </head>
 <body>
 
-  <header>
-    <h1>🎵 Ma collection de CD</h1>
-    <a href="index.html">⬅ Retour à l'accueil</a>
-    <a href="ajouter-livre.html?type=cd"><button>🔍 Ajouter un CD</button></a>
-  </header>
+    <header>
+        <h1>💿 Ma collection de CD</h1>
+        <a href="index.html">⬅ Retour à l'accueil</a>
+        <button id="go-to-search">🔍 Ajouter un CD</button>
+        <div>
+          <button onclick="afficherAlbums()">📚 Albums</button>
+          <button onclick="afficherArtistes()">🎤 Artistes</button>
+        </div>
+      </header>
+      
 
   <div id="cd"></div>
 

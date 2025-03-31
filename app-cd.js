@@ -55,6 +55,65 @@ const firebaseConfig = {
         });
     }
   }
+  function afficherArtistes() {
+    const container = document.getElementById("cd");
+    container.innerHTML = "<h2>🎤 Artistes</h2>";
+  
+    db.collection("cd").orderBy("authors").get()
+      .then(snapshot => {
+        const artisteMap = {};
+  
+        snapshot.forEach(doc => {
+          const cd = doc.data();
+          if (!cd.authors || !cd.authors.trim()) return;
+  
+          const artistKey = cd.authors.trim().toLowerCase();
+          if (!artisteMap[artistKey]) {
+            artisteMap[artistKey] = {
+              name: cd.authors.trim(),
+              albums: []
+            };
+          }
+          artisteMap[artistKey].albums.push({ ...cd, id: doc.id });
+        });
+  
+        if (Object.keys(artisteMap).length === 0) {
+          container.innerHTML += "<p>Aucun artiste trouvé.</p>";
+          return;
+        }
+  
+        Object.values(artisteMap).forEach(artiste => {
+          const artisteDiv = document.createElement('div');
+          artisteDiv.classList.add('serie');
+  
+          const title = document.createElement('div');
+          title.classList.add('serie-title');
+          title.textContent = artiste.name;
+          title.onclick = () => {
+            const visible = artisteDiv.querySelectorAll('.tome')[0]?.style.display !== 'none';
+            artisteDiv.querySelectorAll('.tome').forEach(t => t.style.display = visible ? 'none' : 'block');
+          };
+  
+          artisteDiv.appendChild(title);
+  
+          artiste.albums.forEach(album => {
+            const albumDiv = document.createElement('div');
+            albumDiv.classList.add('tome');
+            albumDiv.innerHTML = `
+              <strong>${album.title}</strong>
+              ${album.thumbnail ? `<br><img src="${album.thumbnail}" alt="Couverture" style="max-height:100px;">` : ''}
+              <br>
+              <button onclick="supprimerDocument('${album.id}', 'cd')">🗑️ Supprimer</button>
+              <hr>
+            `;
+            albumDiv.style.display = 'none';
+            artisteDiv.appendChild(albumDiv);
+          });
+  
+          container.appendChild(artisteDiv);
+        });
+      });
+  }
   
   document.addEventListener('DOMContentLoaded', afficherCD);
   
