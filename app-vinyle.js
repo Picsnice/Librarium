@@ -1,3 +1,14 @@
+const firebaseConfig = {
+  apiKey: "AIzaSyCJ3jYAV_Gezs15BXksrlAltDreRyinsyo",
+  authDomain: "librarium-b4c0d.firebaseapp.com",
+  projectId: "librarium-b4c0d",
+  storageBucket: "librarium-b4c0d.appspot.com",
+  messagingSenderId: "1441664273",
+  appId: "1:1441664273:web:fdcaa227a96992c5e0d0b0"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
 // Affiche tous les vinyles
 function afficherAlbums() {
     const container = document.getElementById("vinyle");
