@@ -44,7 +44,7 @@ const firebaseConfig = {
   
         bds.forEach(bd => {
           const div = document.createElement('div');
-          div.classList.add('livre');
+          div.classList.add('livre', 'bd');
           div.innerHTML = `
             <h3>${bd.title}</h3>
             <p>Auteur(s) : ${bd.authors}</p>

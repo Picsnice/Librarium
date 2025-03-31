@@ -23,7 +23,8 @@ function afficherAlbums() {
       snapshot.forEach(doc => {
         const vinyle = doc.data();
         const div = document.createElement('div');
-        div.classList.add('livre');
+        div.classList.add('livre', 'vinyle');
+        
         div.innerHTML = `
           <h3>${vinyle.title}</h3>
           <p>Artiste : ${vinyle.authors}</p>

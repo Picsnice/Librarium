@@ -133,3 +133,8 @@ button + button {
     font-size: 1em;
   }
 }
+.livre.livre::before { content: "📘"; }
+.livre.bd::before { content: "📖"; }
+.livre.cd::before { content: "💿"; }
+.livre.vinyle::before { content: "💿"; }
+.livre.jeu::before { content: "🎮"; }
