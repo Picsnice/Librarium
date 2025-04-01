@@ -3,43 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <title>Librarium</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
-    body {
-      font-family: sans-serif;
-      padding: 40px;
-      text-align: center;
-    }
-    h1 {
-      font-size: 2em;
-      margin-bottom: 20px;
-    }
-    .nav {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 20px;
-    }
-    a button {
-      font-size: 1.2em;
-      padding: 15px 25px;
-      cursor: pointer;
-    }
-  </style>
+  <link rel="stylesheet" href="styles.css">
+  <!-- Charger les bibliothèques Firebase en mode compat -->
+  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
 </head>
 <body>
-
-  <h1>📚 Bienvenue sur Librarium</h1>
-
-  <div class="nav">
-    <a href="livres.html"><button>📘 Livres</button></a>
-    <a href="bd.html"><button>📖 BD</button></a>
-    <a href="cd.html"><button>🎵 CD</button></a>
-    <a href="vinyles.html"><button>💿 Vinyles</button></a>
-    <a href="jeux.html"><button>🎮 Jeux</button></a>
-
-    <a href="ajouter-livre.html"><button>➕ Ajouter</button></a>
+  <div id="collections">
+    <h1>Mes Collections</h1>
+    <ul id="collections-list"></ul>
   </div>
-
+  <!-- Charger la configuration Firebase et le script principal -->
+  <script src="firebase-config.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>
